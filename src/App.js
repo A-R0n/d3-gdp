@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import * as axis from 'd3-axis';
 import './App.css';
-
 
 class App extends Component {
   constructor() {
@@ -30,6 +28,9 @@ class App extends Component {
     var h = 300;
     var padding = 50;
     var barPadding = 1; // <-- New!
+    var mindate = new Date(2008),
+      maxdate = new Date(2017);
+    var parseTime = d3.timeParse('%y');
     var dataset = [
       [2008, -0.3],
       [2009, -2.8],
@@ -42,16 +43,17 @@ class App extends Component {
       [2016, 1.5],
       [2017, 2.3]
     ];
-    console.log(d3.scaleTime)
+
     var xScale = d3
-      .scaleTime()
+      .scaleLinear()
       .domain([
         d3.min(dataset, function(d) {
-          return new Date(parseInt(d[0]));
+          return d[0];
         }),
         d3.max(dataset, function(d) {
-          return new Date(parseInt(d[0]));
+          return d[0];
         })
+        // mindate, maxdate
       ])
       .range([padding, w - padding * 2]);
 
@@ -67,23 +69,42 @@ class App extends Component {
       ])
       .range([h - padding, padding]);
 
+    var line = d3
+      .line()
+      .x(function(d) {
+        return xScale(d[0]);
+      })
+      .y(function(d) {
+        return yScale(d[1]);
+      })
+      .curve(d3.curveLinear);
+    console.log(line(dataset));
+
+    // d3.select('body').append('code').text('Line path data: ' + line(dataset));
+
     var rScale = d3
       .scaleLinear()
       .domain([
-        0,
+        -6,
         d3.max(dataset, function(d) {
           return d[1];
         })
       ])
       .range([2, 5]);
 
-    var xAxis = d3.axisBottom(xScale).ticks(10); //Set rough # of ticks;
-    var yAxis = d3.axisLeft(yScale).ticks(5) //Set rough # of ticks;
-    // var formatAsPercentage = d3.format('.1%');
-    // yAxis.tickFormat(formatAsPercentage);
-    
-    
-
+    var xAxis = d3
+      .axisBottom(xScale)
+      .tickValues([2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017])
+      .ticks(d3.timeYear())
+      .tickFormat(function(n) {
+        return n;
+      }); //Set rough # of ticks;
+    var yAxis = d3
+      .axisLeft(yScale)
+      .tickValues([-3, -2, -1, 0, 1, 2, 3, 4])
+      .tickFormat(function(n) {
+        return n + '%';
+      }); //Set rough # of ticks;
 
     // d3.select('body')
     //   .selectAll('div') // selects p tags that dont exist yet
@@ -155,6 +176,11 @@ class App extends Component {
       .attr('class', 'axis')
       .attr('transform', 'translate(' + padding + ',0)')
       .call(yAxis);
+
+    svg
+      .append('path')
+      .datum(dataset)
+      .attr('d', line);
 
     return <div className="gdp">GDP Growth in the USA</div>;
   }
