@@ -12,3 +12,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+p {
+  font-size: 12px;
+  line-height: 14px;
+  color: black;
+}
+
+h3 {
+  background: pink;
+}
