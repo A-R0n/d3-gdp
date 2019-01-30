@@ -24,12 +24,13 @@ class App extends Component {
   }
 
   render() {
-    var w = 500;
-    var h = 300;
+    var w = 500,
+      w2 = 400;
+    var h = 300,
+      h2 = 4;
+
     var padding = 50;
-    var barPadding = 1; // <-- New!
-    var mindate = new Date(2008),
-      maxdate = new Date(2017);
+    var barPadding = 2; // <-- New!
     var parseTime = d3.timeParse('%y');
     var dataset = [
       [2008, -0.3],
@@ -43,6 +44,26 @@ class App extends Component {
       [2016, 1.5],
       [2017, 2.3]
     ];
+    var bar = [-0.3, -2.8, 3.0, 1.7, 2.2, 1.7, 2.6, 2.9, 1.5, 2.3];
+
+    var scale_bar_x = d3
+      .scaleBand()
+      .domain([
+        d3.min(bar, function(d) {
+          return d[0];
+        }),
+        d3.max(bar, function(d) {
+          return d[0];
+        })
+      ])
+      .range([0, w2])
+      .padding(0.1);
+
+    var scale_bar_y = d3
+      .scaleLinear()
+      .domain([0, d3.max(bar, d => d.value)])
+      .nice()
+      .range([h2 - 10, 10]);
 
     var xScale = d3
       .scaleLinear()
@@ -78,7 +99,6 @@ class App extends Component {
         return yScale(d[1]);
       })
       .curve(d3.curveLinear);
-    console.log(line(dataset));
 
     // d3.select('body').append('code').text('Line path data: ' + line(dataset));
 
@@ -106,21 +126,35 @@ class App extends Component {
         return n + '%';
       }); //Set rough # of ticks;
 
-    // d3.select('body')
-    //   .selectAll('div') // selects p tags that dont exist yet
-    //   .data(dataset) // counts and parses data values
-    //   .enter() // creates a placeholder element and compares the data with the DOM
-    //   .append('div') //takes the placeholder selection created by enter and inserts the parameter into the DOM
-    //   // .text("New paragraph!"); // creates the paragraph tags x amount of times
-    //   // .text(function(d) {
-    //   //   return d;
-    //   // }) // goes to each item in the dataset
-    //   // .style('color', 'red') //colors the text red
-    //   .attr('class', 'bar')
-    //   .style('height', function(d) {
-    //     var barHeight = d * 5; //Scale up by factor of 5
-    //     return barHeight + 'px';
-    //   });
+      var xAxis = d3
+      .axisBottom(xScale)
+      .tickValues([2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017])
+      .ticks(d3.timeYear())
+      .tickFormat(function(n) {
+        return n;
+      }); //Set rough # of ticks;
+    var yAxis = d3
+      .axisLeft(yScale)
+      .tickValues([-3, -2, -1, 0, 1, 2, 3, 4])
+      .tickFormat(function(n) {
+        return n + '%';
+      }); //Set rough # of ticks;
+
+      var xAxis_bar = d3
+      .axisBottom(scale_bar_x)
+      .tickValues([2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017])
+      .ticks(d3.timeYear())
+      .tickFormat(function(n) {
+        return n;
+      });
+
+      var yAxis_bar = d3
+      .axisLeft(scale_bar_y)
+      .tickValues([-3, -2, -1, 0, 1, 2, 3, 4])
+      .tickFormat(function(n) {
+        return n + '%';
+      });
+
     var svg = d3
       .select('body')
       .append('svg')
@@ -181,6 +215,51 @@ class App extends Component {
       .append('path')
       .datum(dataset)
       .attr('d', line);
+
+    var svg_bar = d3
+      .select('body')
+      .append('svg')
+      .attr('width', w2)
+      .attr('height', function(d) {
+        return d * 5;
+      });
+
+    svg_bar
+      .selectAll('rect')
+      .data(bar)
+      .enter()
+      .append('rect')
+      .attr('x', function(d, i) {
+        return i * (w2 / bar.length);
+      })
+      .attr('y', function(d) {
+        return h2 - d;
+      })
+      .attr('width', w2 / bar.length - barPadding)
+      .attr('height', function(d) {
+        return d * 50;
+      })
+      .attr('fill', 'steelblue');
+
+    svg_bar
+      .selectAll('text')
+      .data(bar)
+      .enter()
+      .append('text')
+      .text(function(d) {
+        return d;
+      })
+      .attr('x', function(d, i) {
+        return i * (w2 / bar.length) + (w2 / bar.length - barPadding) / 2;
+      })
+
+      .attr('y', function(d) {
+        return (h2 - d * 4 + 20); //15 is now 14
+      })
+      .attr('font-family', 'sans-serif')
+      .attr('font-size', '11px')
+      .attr('fill', 'white')
+      .attr('text-anchor', 'middle');
 
     return <div className="gdp">GDP Growth in the USA</div>;
   }
