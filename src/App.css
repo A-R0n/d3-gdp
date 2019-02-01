@@ -1,13 +1,12 @@
 .bar {
-  display: inline-block;
-  width: 200px;
-  height: 200px;
+ 
+  height: 220px;
   background-color: teal;
-  margin-right: 2px;
+  
 }
 
 body {
-  margin-left: 50px;
+  /* margin-left: 50px; */
   
 }
 
@@ -30,10 +29,13 @@ p {
 }
 
 .gdp {
-  padding-left: 150px;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   font-weight: bold;
  
+}
+
+.bar {
+  width: 30px;
 }
 
 .tick {

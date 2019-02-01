@@ -1,25 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head >
+  <head>
     <meta charset="utf-8" />
-    <style> /* set the CSS */
+    <header>GDP Growth in the USA
+      </header>
+    <style>
+      /* set the CSS */
 
       path {
-  		fill: none;
-  		stroke: steelblue;
-  		stroke-width: 1.5px;
-		}
-      
-      </style>
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 1.5px;
+      }
+
+      header {
+        background: rgba(182, 176, 176, 0.692);
+        width: 30vw;
+        margin: auto;
+        text-align: center;
+        position: fixed;
+        left: 35%;
+        font-size: 2em;
+        font-weight: bold;
+      }
+
+      body {
+        
+        display: flex;
+      }
+
+      #area1{
+        padding-left: 50px;
+        margin-top: 100px;
+        width: 50%;
+        
+      }
+
+      #area2 {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         /* margin-bottom: 0; */
+         /* padding-bottom: 0; */
+        width: 50vw;
+        border: 1px solid black;
+      }
+
+      .special2 {
+        margin-right: 20px;
+      }
+    </style>
     <title>D3 Test</title>
-    <script
-      type="text/javascript"
-      src="https://d3js.org/d3.v5.min.js"
-    ></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/d3-axis.v1.min.js"></script>
     <script src="https://d3js.org/d3-time.v1.min.js"></script>
   </head>
+
   <body>
+    
     <div id="root"></div>
+    <div id="area1"></div>
+    <svg id="area2"></svg>
   </body>
 </html>
