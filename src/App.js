@@ -5,19 +5,19 @@ import './App.css';
 import Bar from './Components/Bar';
 
 class App extends Component {
-  constructor() {
-    super();
-  }
-
-  // listener = () => {
-  //   d3.select(this).attr()
-  // }
-
   render() {
-    var w = 500,
-      w2 = 400;
-    var h = 300,
-      h2 = 4;
+    var dataset = [
+      [2008, -0.3],
+      [2009, -2.8],
+      [2010, 3.0],
+      [2011, 1.7],
+      [2012, 2.2],
+      [2013, 1.7],
+      [2014, 2.6],
+      [2015, 2.9],
+      [2016, 1.5],
+      [2017, 2.3]
+    ];
     var growth = [
       { year: 2007, gdp: 14.452 },
       { year: 2008, gdp: 14.713 },
@@ -32,19 +32,9 @@ class App extends Component {
       { year: 2017, gdp: 19.485 }
     ];
     var padding = 60;
-    var barPadding = 2; // <-- New!
-    var dataset = [
-      [2008, -0.3],
-      [2009, -2.8],
-      [2010, 3.0],
-      [2011, 1.7],
-      [2012, 2.2],
-      [2013, 1.7],
-      [2014, 2.6],
-      [2015, 2.9],
-      [2016, 1.5],
-      [2017, 2.3]
-    ];
+    var barPadding = 2;
+    var w = 500;
+    var h = 300;
 
     var xScale = d3
       .scaleLinear()
@@ -79,8 +69,6 @@ class App extends Component {
         return yScale(d[1]);
       })
       .curve(d3.curveLinear);
-
-    // d3.select('body').append('code').text('Line path data: ' + line(dataset));
 
     var rScale = d3
       .scaleLinear()
@@ -166,6 +154,30 @@ class App extends Component {
       .append('path')
       .datum(dataset)
       .attr('d', line);
+    svg
+      .append('text')
+      .attr('x', w / 2.2)
+      .attr('y', 40)
+      .attr('text-anchor', 'middle')
+      .text(`USA Δ's in GDP - 10 year period`)
+      .attr('fill', 'white');
+
+    svg
+      .append('text')
+      .attr('x', -150)
+      .attr('y', 20)
+      .attr('transform', 'rotate(-90)')
+      .attr('text-anchor', 'middle')
+      .text('%Δ in GDP')
+      .attr('fill', 'white');
+
+    svg
+      .append('text')
+      .attr('x', w / 1.2)
+      .attr('y', 285)
+      .attr('text-anchor', 'middle')
+      .text('Year')
+      .attr('fill', 'white');
 
     // BAR GRAPH
 
@@ -292,16 +304,16 @@ class App extends Component {
       .attr('y', margin2 / 2.4)
       .attr('transform', 'rotate(-90)')
       .attr('text-anchor', 'middle')
-      .text('GDP')
-      .attr('fill','white');;
+      .text('GDP (in trillions)')
+      .attr('fill', 'white');
 
     svg
       .append('text')
       .attr('x', width2 / 2 + margin2)
       .attr('y', 40)
       .attr('text-anchor', 'middle')
-      .text('Gross Domestic Product in the USA - 10 years')
-      .attr('fill','white');
+      .text('USA Gross Domestic Product - 10 years')
+      .attr('fill', 'white');
 
     svg
       .append('text')
@@ -309,7 +321,7 @@ class App extends Component {
       .attr('y', 580)
       .attr('text-anchor', 'middle')
       .text('Year')
-      .attr('fill','white');
+      .attr('fill', 'white');
 
     return <div className="gdp" />;
   }

@@ -58,7 +58,7 @@ line#limit {
   stroke-opacity: 0.3;
 }
 text {
-  color: rgb(175, 161, 161);
+  color: white;
 }
 
 text.divergence {
