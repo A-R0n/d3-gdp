@@ -7,23 +7,11 @@ import Bar from './Components/Bar';
 class App extends Component {
   constructor() {
     super();
-
-    this.state = {
-      growth: [
-        { year: 2007, gdp: 14.452 },
-        { year: 2008, gdp: 14.713 },
-        { year: 2009, gdp: 14.449 },
-        { year: 2010, gdp: 14.992 },
-        { year: 2011, gdp: 15.543 },
-        { year: 2012, gdp: 16.197 },
-        { year: 2013, gdp: 16.785 },
-        { year: 2014, gdp: 17.522 },
-        { year: 2015, gdp: 18.219 },
-        { year: 2016, gdp: 18.707 },
-        { year: 2017, gdp: 19.485 }
-      ]
-    };
   }
+
+  // listener = () => {
+  //   d3.select(this).attr()
+  // }
 
   render() {
     var w = 500,
@@ -43,7 +31,7 @@ class App extends Component {
       { year: 2016, gdp: 18.707 },
       { year: 2017, gdp: 19.485 }
     ];
-    var padding = 50;
+    var padding = 60;
     var barPadding = 2; // <-- New!
     var dataset = [
       [2008, -0.3],
@@ -181,49 +169,147 @@ class App extends Component {
 
     // BAR GRAPH
 
-    // const margin = 50;
-    var margin = { top: 60, right: 20, bottom: 30, left: 50 };
+    const margin2 = 60;
+    const width2 = 1000 - 2 * margin2;
+    const height2 = 600 - 2 * margin2;
 
-    const width = 450;
-    const height = 250;
-
-    const svg = d3.select('#area2');
+    const svg = d3.select('#area2').append('svg');
     const chart = svg
       .append('g')
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+      .attr('transform', `translate(${margin2}, ${margin2})`);
 
     const xScale_2 = d3
       .scaleBand()
-      .rangeRound([margin.left, width])
-      .domain([2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017]);
+      .range([0, width2])
+      .domain(growth.map(s => s.year))
+      .padding(0.2);
 
+    const yScale_2 = d3
+      .scaleLinear()
+      .range([height2, 0])
+      .domain([14, 20]);
+
+    chart.append('g').call(d3.axisLeft(yScale_2));
     chart
-      .selectAll()
+      .append('g')
+      .attr('transform', `translate(0, ${height2})`)
+      .call(d3.axisBottom(xScale_2));
+
+    const barGroups = chart
+      .selectAll('svg')
       .data(growth)
       .enter()
+      .append('g');
+    barGroups
       .append('rect')
       .attr('class', 'bar')
-      .attr('fill', 'teal')
       .attr('x', function(d) {
         return xScale_2(d.year);
       })
-      .attr('width', xScale_2.bandwidth())
       .attr('y', function(d) {
-        return yScale(d.gdp);
+        return yScale_2(d.gdp);
       })
-      .attr('height', function(d) {
-        return height - yScale(d.gdp);
+      .attr('height', s => height2 - yScale_2(s.gdp))
+      .attr('width', xScale_2.bandwidth())
+
+      // ENTERING
+      .on('mouseenter', function(actual, i) {
+        d3.select(this)
+          .transition()
+          .duration(300)
+          .attr('opacity', 0.6)
+          .attr('x', a => xScale_2(a.year) - 5)
+          .attr('width', xScale_2.bandwidth() + 10);
+
+        const y = yScale_2(actual.gdp);
+        var line = chart
+          .append('line')
+          .attr('id', 'limit')
+          .attr('x1', 0)
+          .attr('y1', y)
+          .attr('x2', width2)
+          .attr('y2', y);
+
+        barGroups
+          .append('text')
+          .attr('class', 'divergence')
+          .attr('x', a => xScale_2(a.year) + xScale_2.bandwidth() / 2)
+          .attr('y', a => yScale_2(a.gdp) + 30)
+          .attr('fill', 'white')
+          .attr('text-anchor', 'middle')
+          .text((a, idx) => {
+            const divergence = (a.gdp - actual.gdp).toFixed(1);
+
+            let text = '';
+            if (divergence > 0) text += '+';
+            text += `${divergence}%`;
+
+            return idx !== i ? text : '';
+          });
       })
-      .attr('transform', `translate(${50}, ${height})`);
+
+      // LEAVING
+      .on('mouseleave', function() {
+        d3.selectAll('.value').attr('opacity', 1);
+
+        d3.select(this)
+          .transition()
+          .duration(300)
+          .attr('opacity', 1)
+          .attr('x', a => xScale_2(a.year))
+          .attr('width', xScale_2.bandwidth());
+
+        chart.selectAll('#limit').remove();
+        chart.selectAll('.divergence').remove();
+      });
 
     chart
       .append('g')
-      .attr('transform', 'translate(' + padding + ',0)')
-      .call(d3.axisLeft(yScale));
+      .attr('class', 'grid')
+      .attr('transform', `translate(0, ${height2})`)
+      .call(
+        d3
+          .axisBottom()
+          .scale(xScale_2)
+          .tickSize(-height2, 0, 0)
+          .tickFormat('')
+      );
+
     chart
       .append('g')
-      .attr('transform', 'translate(0,' + (h - padding) + ')')
-      .call(d3.axisBottom(xScale_2));
+      .attr('class', 'grid')
+      .call(
+        d3
+          .axisLeft()
+          .scale(yScale_2)
+          .tickSize(-width2, 0, 0)
+          .tickFormat('')
+      );
+
+    svg
+      .append('text')
+      .attr('x', -(height2 / 2) - margin2)
+      .attr('y', margin2 / 2.4)
+      .attr('transform', 'rotate(-90)')
+      .attr('text-anchor', 'middle')
+      .text('GDP')
+      .attr('fill','white');;
+
+    svg
+      .append('text')
+      .attr('x', width2 / 2 + margin2)
+      .attr('y', 40)
+      .attr('text-anchor', 'middle')
+      .text('Gross Domestic Product in the USA - 10 years')
+      .attr('fill','white');
+
+    svg
+      .append('text')
+      .attr('x', width2 / 2 + margin2)
+      .attr('y', 580)
+      .attr('text-anchor', 'middle')
+      .text('Year')
+      .attr('fill','white');
 
     return <div className="gdp" />;
   }

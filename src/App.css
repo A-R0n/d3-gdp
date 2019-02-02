@@ -1,12 +1,5 @@
 .bar {
- 
-  height: 220px;
-  background-color: teal;
-  
-}
-
-body {
-  /* margin-left: 50px; */
+  fill: #80cbc4;
   
 }
 
@@ -35,12 +28,63 @@ p {
 }
 
 .bar {
-  width: 30px;
+  display: inline-block;
+  width: 70px;
+  background-color: teal;
+  margin-right: 2px;
 }
 
 .tick {
   background: pink;
   border: 1px solid black;
 }
+
+line {
+  stroke: gray;
+}
+
+line#limit {
+  stroke: #FED966;
+  stroke-width: 3;
+  stroke-dasharray: 3 6;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
+.grid .tick line {
+  stroke: #9FAAAE;
+  stroke-opacity: 0.3;
+}
+text {
+  color: rgb(175, 161, 161);
+}
+
+text.divergence {
+  font-size: 14px;
+  fill: #2F4A6D;
+}
+
+text.value {
+  font-size: 14px;
+}
+
+text.title {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+text.label {
+  font-size: 14px;
+  font-weight: 400;
+  color: white;
+}
+
+text.source {
+  font-size: 10px;
+}
+
+
 
 
