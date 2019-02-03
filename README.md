@@ -7,7 +7,7 @@ $ npm install --save d3
 ### Summary
 1. Create an svg element in index.html with d3 select('name_of_div') to return the first matching element.
 2. .append('g') will apply padding to the svg.
-3. .attr() (and CSS) will style the element.
+3. .attr() will style the element.
 4. .data(dataset) will loop through the data values in a variable called 'dataset'. It is up to you what to name this variable. The code is executed one time for every index in the dataset.
 5. .enter() will create a reference to a placeholder that will look at the DOM and compare it with the new elements being appended.
 6. .append('circle') will create an svg circle for every item in the dataset. These will be the points that make up the scatterplot.
