@@ -35,13 +35,14 @@
       #area1{
         display: flex;
         justify-content: center;
+        flex-direction: column;
         align-items: center;
         margin: auto;
         margin-top: 120px;
         margin-left: 50px;
         width: 28%;
         background: rgb(56, 105, 105);
-        
+        border: 2px solid black;
       }
 
       #area2 {
@@ -49,8 +50,14 @@
         margin-left: 0px;
         margin-top: 120px;
         width: 62vw;
-        border: 1px solid black;
+        border: 2px solid black;
         background-color: #2F4A6D;
+      }
+
+      .gdp {
+        background: yellow;
+        border: 1px solid black;
+       
       }
 
     </style>
@@ -63,7 +70,8 @@
   <body>
     
     <div id="root"></div>
-    <div id="area1"></div>
+    <div id="area1">
+  </div>
     <svg id="area2" width="500" height="600"></svg>
   </body>
 </html>

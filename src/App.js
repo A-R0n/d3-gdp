@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import { select } from 'd3';
 import './App.css';
-import Bar from './Components/Bar';
+
 
 class App extends Component {
   render() {
@@ -35,6 +34,8 @@ class App extends Component {
     var barPadding = 2;
     var w = 500;
     var h = 300;
+
+    // SCATTERPLOT
 
     var xScale = d3
       .scaleLinear()
@@ -136,7 +137,7 @@ class App extends Component {
       })
       .attr('font-family', 'sans-serif')
       .attr('font-size', '11px')
-      .attr('fill', 'red');
+      .attr('fill', 'rgb(136, 2, 2)')
 
     svg
       .append('g')
@@ -154,6 +155,7 @@ class App extends Component {
       .append('path')
       .datum(dataset)
       .attr('d', line);
+      
     svg
       .append('text')
       .attr('x', w / 2.2)
@@ -323,7 +325,7 @@ class App extends Component {
       .text('Year')
       .attr('fill', 'white');
 
-    return <div className="gdp" />;
+    return <div className="gdp"></div>;
   }
 }
 
